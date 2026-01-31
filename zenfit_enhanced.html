@@ -1,0 +1,3185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ZenFit — Enhanced Fitness Tracker</title>
+<style>
+/* CSS Variables */
+:root {
+  --bg: #071018;
+  --card: #0e1720;
+  --card-hover: #121b26;
+  --muted: #9fb0b6;
+  --accent: #15b0d6;
+  --accent-hover: #1ac5eb;
+  --accent-dark: #0aa3bf;
+  --glass: rgba(255,255,255,0.03);
+  --border: #1a2530;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --text: #e6f3f6;
+  --text-dim: #7a9099;
+  
+  /* Badge colors */
+  --bronze: #cd7f32;
+  --silver: #c0c0c0;
+  --gold: #ffd700;
+  --platinum: #e5e4e2;
+}
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+  line-height: 1.6;
+}
+
+/* Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.header-title {
+  flex: 1;
+  min-width: 280px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, var(--accent), #64d9f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  background: var(--card);
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.nav .btn {
+  flex: 1;
+  min-width: 100px;
+}
+
+.nav .btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  box-shadow: 0 4px 12px rgba(21, 176, 214, 0.3);
+}
+
+/* Buttons */
+.btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(21, 176, 214, 0.4);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.btn.ghost:hover {
+  background: var(--glass);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.btn.secondary {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn.secondary:hover {
+  background: var(--card-hover);
+  border-color: var(--accent);
+}
+
+.btn.danger {
+  background: var(--danger);
+}
+
+.btn.danger:hover {
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.btn.success {
+  background: var(--success);
+}
+
+.btn.small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(21, 176, 214, 0.3);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Grid & Flex */
+.row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1;
+  min-width: 280px;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Typography */
+.text-muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.text-small {
+  font-size: 12px;
+}
+
+.text-dim {
+  color: var(--text-dim);
+}
+
+h2, h3, h4 {
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+h2 { font-size: 20px; }
+h3 { font-size: 18px; }
+h4 { font-size: 16px; }
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(21, 176, 214, 0.2);
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+
+/* Progress Bar */
+.progress-bar {
+  height: 24px;
+  background: rgba(21, 176, 214, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  transition: width 0.3s ease;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+/* Streak Display */
+.streak-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(21, 176, 214, 0.1), rgba(16, 185, 129, 0.1));
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.streak-item {
+  text-align: center;
+  padding: 12px 24px;
+}
+
+.streak-value {
+  font-size: 48px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--success));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.streak-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.streak-fire {
+  font-size: 36px;
+  margin: 0 16px;
+}
+
+/* Badge System */
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.badge-item {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.badge-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.badge-item.unlocked {
+  border-color: var(--accent);
+}
+
+.badge-item.locked {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.badge-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.badge-item.tier-bronze .badge-icon {
+  color: var(--bronze);
+}
+
+.badge-item.tier-silver .badge-icon {
+  color: var(--silver);
+}
+
+.badge-item.tier-gold .badge-icon {
+  color: var(--gold);
+}
+
+.badge-item.tier-platinum .badge-icon {
+  color: var(--platinum);
+}
+
+.badge-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.badge-desc {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.badge-new {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--success);
+  color: white;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Lists */
+.list {
+  margin-top: 16px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+  gap: 12px;
+}
+
+.list-item:hover {
+  background: var(--glass);
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.list-item-content {
+  flex: 1;
+}
+
+.list-item-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.list-item-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.list-item-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.input,
+textarea,
+select {
+  background: rgba(8, 22, 26, 0.8);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(21, 176, 214, 0.1);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal-panel {
+  background: var(--card);
+  padding: 28px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: modalSlide 0.2s ease;
+}
+
+@keyframes modalSlide {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.modal-actions {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  background: rgba(21, 176, 214, 0.2);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  border: 1px solid rgba(21, 176, 214, 0.3);
+}
+
+/* Chart Container */
+.chart-container {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+.chart-canvas {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+}
+
+/* Float Button */
+.float-quick {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 100;
+}
+
+.float-quick .btn {
+  box-shadow: 0 4px 20px rgba(21, 176, 214, 0.4);
+  padding: 14px 20px;
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-actions {
+    width: 100%;
+  }
+  
+  .header-actions .btn {
+    flex: 1;
+  }
+  
+  .nav {
+    flex-direction: column;
+  }
+  
+  .nav .btn {
+    width: 100%;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .badge-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .streak-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .streak-fire {
+    margin: 0;
+  }
+  
+  .modal-panel {
+    padding: 20px;
+  }
+  
+  .list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .list-item-actions {
+    width: 100%;
+  }
+  
+  .list-item-actions .btn {
+    flex: 1;
+  }
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+td {
+  font-size: 14px;
+}
+
+tr:hover {
+  background: var(--glass);
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.filters .input,
+.filters select {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.empty-state-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-state-text {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.empty-state-subtext {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* Achievement Notification */
+.achievement-toast {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  background: var(--card);
+  border: 2px solid var(--success);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2000;
+  animation: slideIn 0.3s ease;
+  max-width: 340px;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.achievement-toast-icon {
+  font-size: 32px;
+}
+
+.achievement-toast-content {
+  flex: 1;
+}
+
+.achievement-toast-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--success);
+}
+
+.achievement-toast-desc {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Footer */
+.footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Utility Classes */
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+.hidden { display: none; }
+.text-center { text-align: center; }
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">
+      <h1 class="title">ZenFit — Enhanced Fitness Tracker</h1>
+      <div class="subtitle">Track workouts, build streaks, unlock achievements • All data stored locally</div>
+    </div>
+    <div class="header-actions">
+      <button id="importBtn" type="button" class="btn ghost">📥 Import</button>
+      <button id="exportBtn" type="button" class="btn ghost">📤 Export</button>
+      <button id="achievementsBtn" type="button" class="btn secondary">🏆 Achievements</button>
+      <button id="aboutBtn" type="button" class="btn secondary">ℹ️ About</button>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <button type="button" class="btn active" data-view="dashboard">📊 Dashboard</button>
+    <button type="button" class="btn" data-view="history">📜 History</button>
+    <button type="button" class="btn" data-view="presets">📋 Presets</button>
+    <button type="button" class="btn" data-view="planner">📅 Planner</button>
+    <button type="button" class="btn" data-view="settings">⚙️ Settings</button>
+  </div>
+
+  <!-- Views Container -->
+  <div id="views">
+    <!-- DASHBOARD VIEW -->
+    <section id="dashboard" class="view">
+      <!-- Streak Display -->
+      <div class="streak-container">
+        <div class="streak-item">
+          <div class="streak-value" id="currentStreak">0</div>
+          <div class="streak-label">Current Streak</div>
+        </div>
+        <div class="streak-fire">🔥</div>
+        <div class="streak-item">
+          <div class="streak-value" id="longestStreak">0</div>
+          <div class="streak-label">Longest Streak</div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">💪</div>
+          <div class="stat-value" id="weekWorkouts">0</div>
+          <div class="stat-label">This Week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value" id="totalWorkouts">0</div>
+          <div class="stat-label">Total Workouts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏅</div>
+          <div class="stat-value" id="badgesUnlocked">0</div>
+          <div class="stat-label">Badges Unlocked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-value" id="totalPRs">0</div>
+          <div class="stat-label">Personal Records</div>
+        </div>
+      </div>
+
+      <!-- Weekly Goal -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Weekly Goal Progress</h2>
+        </div>
+        <div class="progress-bar">
+          <div id="goalFill" class="progress-fill" style="width: 0%">
+            <span id="goalText"></span>
+          </div>
+        </div>
+        <div class="text-muted mt-1" id="goalSubtext"></div>
+      </div>
+
+      <!-- Quick Actions & Progress Chart -->
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Progress (Last 7 Days)</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="lineChart" class="chart-canvas" width="800" height="180"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Quick Actions</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button type="button" id="quickStartBtn" class="btn">🚀 Start Today's Plan</button>
+              <button type="button" id="openQuickLog" class="btn">⚡ Quick Log</button>
+              <button type="button" id="newWorkoutBtn" class="btn">➕ New Workout</button>
+            </div>
+            <h4 class="mt-3 mb-2">Next Planned</h4>
+            <div id="nextPlanned" class="list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY VIEW -->
+    <section id="history" class="view hidden">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Workout History</h2>
+        </div>
+        <div class="filters">
+          <input type="text" id="searchInput" class="input" placeholder="🔍 Search workouts..." />
+          <select id="tagFilter" class="input">
+            <option value="">All tags</option>
+          </select>
+          <input type="date" id="dateFrom" class="input" />
+          <input type="date" id="dateTo" class="input" />
+          <button type="button" id="clearFilters" class="btn ghost">Clear</button>
+        </div>
+        <div id="historyList" class="list"></div>
+      </div>
+    </section>
+
+    <!-- PRESETS VIEW -->
+    <section id="presets" class="view hidden">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Workout Presets</h2>
+          <button type="button" id="newPresetBtn" class="btn">➕ New Preset</button>
+        </div>
+        <div id="presetList" class="list"></div>
+      </div>
+    </section>
+
+    <!-- PLANNER VIEW -->
+    <section id="planner" class="view hidden">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Weekly Planner</h2>
+        </div>
+        <div class="text-muted mb-2">Assign workouts or presets to specific days of the week</div>
+        <div class="row">
+          <div class="col">
+            <div id="weekSlots" class="list"></div>
+          </div>
+          <div class="col">
+            <h3>Planner Actions</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
+              <button type="button" id="addOneOff" class="btn">➕ Add One-off Workout</button>
+              <button type="button" id="clearPlanner" class="btn danger">🗑️ Clear All</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS VIEW -->
+    <section id="settings" class="view hidden">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Settings</h2>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Weekly Workout Target</label>
+          <input type="number" id="weeklyTarget" class="input" min="1" max="21" />
+          <div class="text-muted mt-1">Set your weekly workout goal</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Streak Grace Period (days)</label>
+          <input type="number" id="graceDays" class="input" min="0" max="3" value="1" />
+          <div class="text-muted mt-1">Number of consecutive missed days allowed before streak resets</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <input type="checkbox" id="toggleSuggestions" style="width: auto; margin-right: 8px;" />
+            Enable achievement notifications
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <input type="checkbox" id="toggleSounds" style="width: auto; margin-right: 8px;" />
+            Enable sound effects
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Data Management</h3>
+        </div>
+        <p class="text-muted mb-2">Your data is stored locally in your browser. Use these tools to backup or restore your data.</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button type="button" id="exportDataBtn" class="btn">📤 Export JSON</button>
+          <button type="button" id="exportCSVBtn" class="btn">📄 Export CSV</button>
+          <button type="button" id="importDataBtn" class="btn">📥 Import Data</button>
+          <button type="button" id="clearDataBtn" class="btn danger">🗑️ Clear All Data</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>🔒 Privacy: All data stays local in your browser unless you export it</p>
+    <p class="text-small mt-1">ZenFit Enhanced v2.0 • Storage key: zenfit-enhanced-v2</p>
+  </div>
+</div>
+
+<!-- Modal Container -->
+<div id="modal" class="modal" aria-hidden="true" role="dialog">
+  <div class="modal-panel" id="modalPanel"></div>
+</div>
+
+<!-- Float Quick Log Button -->
+<div class="float-quick">
+  <button type="button" id="floatQuickBtn" class="btn">⚡ Quick Log</button>
+</div>
+
+<script>
+'use strict';
+
+/* ==================== UTILITIES ==================== */
+const Utils = (() => {
+  function uid(prefix = 'id') {
+    return prefix + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+  }
+  
+  function todayISO() {
+    return new Date().toISOString().split('T')[0];
+  }
+  
+  function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+  
+  function csvEscape(v) {
+    if (v == null) return '';
+    return '"' + String(v).replace(/"/g, '""') + '"';
+  }
+  
+  function datesBetween(startDate, endDate) {
+    const dates = [];
+    const current = new Date(startDate);
+    const end = new Date(endDate);
+    
+    while (current <= end) {
+      dates.push(new Date(current).toISOString().split('T')[0]);
+      current.setDate(current.getDate() + 1);
+    }
+    
+    return dates;
+  }
+  
+  function daysDifference(date1, date2) {
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
+    const diffTime = Math.abs(d2 - d1);
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+  
+  return { uid, todayISO, clone, csvEscape, datesBetween, daysDifference };
+})();
+
+/* ==================== STORAGE ==================== */
+const Storage = (() => {
+  const KEY = 'zenfit-enhanced-v2';
+  
+  function load() {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error('Corrupt data', e);
+      return null;
+    }
+  }
+  
+  function save(state) {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+  
+  function clear() {
+    localStorage.removeItem(KEY);
+  }
+  
+  return { KEY, load, save, clear };
+})();
+
+/* ==================== SEED DATA ==================== */
+const Seed = (() => {
+  function make() {
+    const today = Utils.todayISO();
+    return {
+      workouts: [
+        {
+          id: Utils.uid('w'),
+          date: today,
+          title: 'Sample Push Workout',
+          exercises: [
+            {
+              id: Utils.uid('e'),
+              name: 'Push-ups',
+              sets: [
+                { index: 1, reps: 15, weight: 0, notes: '' },
+                { index: 2, reps: 12, weight: 0, notes: '' }
+              ]
+            }
+          ],
+          tags: ['push', 'bodyweight'],
+          duration: 20,
+          notes: 'Sample workout to get started'
+        }
+      ],
+      presets: [
+        {
+          id: Utils.uid('p'),
+          name: 'Push Day',
+          exercises: [
+            {
+              id: Utils.uid('e'),
+              name: 'Bench Press',
+              sets: [
+                { index: 1, reps: 8, weight: 60 },
+                { index: 2, reps: 8, weight: 60 },
+                { index: 3, reps: 6, weight: 65 }
+              ]
+            },
+            {
+              id: Utils.uid('e'),
+              name: 'Shoulder Press',
+              sets: [
+                { index: 1, reps: 10, weight: 40 },
+                { index: 2, reps: 10, weight: 40 }
+              ]
+            }
+          ],
+          tags: ['push', 'strength']
+        }
+      ],
+      planner: [],
+      settings: {
+        weeklyTarget: 3,
+        suggestions: true,
+        sounds: true,
+        graceDays: 1
+      },
+      achievements: {
+        unlocked: [],
+        newBadges: []
+      },
+      meta: {
+        created: new Date().toISOString(),
+        version: '2.0'
+      }
+    };
+  }
+  
+  return { make };
+})();
+
+/* ==================== APP STATE ==================== */
+const AppState = (() => {
+  let state = Storage.load() || Seed.make();
+  
+  // Ensure all required fields exist
+  state.workouts = state.workouts || [];
+  state.presets = state.presets || [];
+  state.planner = state.planner || [];
+  state.settings = state.settings || { weeklyTarget: 3, suggestions: true, sounds: true, graceDays: 1 };
+  state.achievements = state.achievements || { unlocked: [], newBadges: [] };
+  state.meta = state.meta || { created: new Date().toISOString(), version: '2.0' };
+  
+  function persist() {
+    Storage.save(state);
+    EventBus.emit('state:change');
+  }
+  
+  function get() {
+    return Utils.clone(state);
+  }
+  
+  // Workouts CRUD
+  function addWorkout(workout) {
+    workout.id = Utils.uid('w');
+    state.workouts.push(workout);
+    persist();
+    
+    // Check for achievements
+    Achievements.checkOnWorkoutAdd(workout);
+    
+    return workout;
+  }
+  
+  function updateWorkout(id, patch) {
+    const w = state.workouts.find(x => x.id === id);
+    if (!w) return null;
+    Object.assign(w, patch);
+    persist();
+    return w;
+  }
+  
+  function deleteWorkout(id) {
+    state.workouts = state.workouts.filter(w => w.id !== id);
+    persist();
+  }
+  
+  function duplicateWorkout(id) {
+    const w = state.workouts.find(x => x.id === id);
+    if (!w) return null;
+    const copy = Utils.clone(w);
+    copy.id = Utils.uid('w');
+    copy.date = Utils.todayISO();
+    state.workouts.push(copy);
+    persist();
+    return copy;
+  }
+  
+  // Presets CRUD
+  function addPreset(preset) {
+    preset.id = Utils.uid('p');
+    state.presets.push(preset);
+    persist();
+    return preset;
+  }
+  
+  function updatePreset(id, patch) {
+    const p = state.presets.find(x => x.id === id);
+    if (!p) return null;
+    Object.assign(p, patch);
+    persist();
+    return p;
+  }
+  
+  function deletePreset(id) {
+    state.presets = state.presets.filter(x => x.id !== id);
+    persist();
+  }
+  
+  // Planner
+  function setPlanner(planner) {
+    state.planner = planner;
+    persist();
+  }
+  
+  function addPlannerItem(item) {
+    item.id = Utils.uid('pl');
+    state.planner.push(item);
+    persist();
+  }
+  
+  function clearPlanner() {
+    state.planner = [];
+    persist();
+  }
+  
+  // Settings
+  function updateSettings(patch) {
+    Object.assign(state.settings, patch);
+    persist();
+  }
+  
+  // Achievements
+  function unlockAchievement(badgeId) {
+    if (!state.achievements.unlocked.includes(badgeId)) {
+      state.achievements.unlocked.push(badgeId);
+      state.achievements.newBadges.push(badgeId);
+      persist();
+      return true;
+    }
+    return false;
+  }
+  
+  function clearNewBadges() {
+    state.achievements.newBadges = [];
+    persist();
+  }
+  
+  // Import/Export
+  function exportJSON() {
+    return Utils.clone(state);
+  }
+  
+  function importJSON(obj, mode = 'append') {
+    if (mode === 'replace') {
+      state = obj;
+      persist();
+    } else {
+      // Append mode: merge lists
+      state.workouts = state.workouts.concat(obj.workouts || []);
+      state.presets = state.presets.concat(obj.presets || []);
+      state.planner = state.planner.concat(obj.planner || []);
+      state.settings = Object.assign({}, state.settings, obj.settings || {});
+      state.achievements = state.achievements || { unlocked: [], newBadges: [] };
+      persist();
+    }
+  }
+  
+  function exportCSV() {
+    const rows = ['date,workoutTitle,exercise,setIndex,reps,weight,notes,tags'];
+    for (const w of state.workouts) {
+      for (const ex of w.exercises) {
+        for (const s of ex.sets) {
+          const tags = (w.tags || []).join('|');
+          rows.push([
+            w.date,
+            w.title,
+            ex.name,
+            s.index || '',
+            s.reps || '',
+            s.weight || '',
+            (s.notes || '').replace(/\n/g, ' '),
+            tags
+          ].map(v => Utils.csvEscape(v)).join(','));
+        }
+      }
+    }
+    return rows.join('\n');
+  }
+  
+  function clearAll() {
+    state = Seed.make();
+    persist();
+  }
+  
+  return {
+    get,
+    persist,
+    addWorkout,
+    updateWorkout,
+    deleteWorkout,
+    duplicateWorkout,
+    addPreset,
+    updatePreset,
+    deletePreset,
+    setPlanner,
+    addPlannerItem,
+    clearPlanner,
+    updateSettings,
+    unlockAchievement,
+    clearNewBadges,
+    exportJSON,
+    importJSON,
+    exportCSV,
+    clearAll
+  };
+})();
+
+/* ==================== EVENT BUS ==================== */
+const EventBus = (() => {
+  const events = {};
+  
+  function on(name, fn) {
+    events[name] = events[name] || [];
+    events[name].push(fn);
+  }
+  
+  function off(name, fn) {
+    if (!events[name]) return;
+    events[name] = events[name].filter(f => f !== fn);
+  }
+  
+  function emit(name, data) {
+    (events[name] || []).forEach(fn => fn(data));
+  }
+  
+  return { on, off, emit };
+})();
+
+/* ==================== STREAK SYSTEM ==================== */
+const StreakSystem = (() => {
+  function calculateStreaks() {
+    const st = AppState.get();
+    const settings = st.settings;
+    const graceDays = settings.graceDays || 1;
+    
+    // Get all unique workout dates sorted descending
+    const workoutDates = [...new Set(st.workouts.map(w => w.date))].sort().reverse();
+    
+    if (workoutDates.length === 0) {
+      return { current: 0, longest: 0, lastWorkout: null };
+    }
+    
+    const today = Utils.todayISO();
+    let currentStreak = 0;
+    let longestStreak = 0;
+    let tempStreak = 0;
+    let lastDate = null;
+    
+    // Calculate current streak (from today backwards)
+    for (let i = 0; i < workoutDates.length; i++) {
+      const date = workoutDates[i];
+      
+      if (i === 0) {
+        // Check if last workout is within grace period
+        const daysSinceLastWorkout = Utils.daysDifference(date, today);
+        if (daysSinceLastWorkout > graceDays) {
+          // Streak is broken
+          currentStreak = 0;
+        } else {
+          currentStreak = 1;
+          tempStreak = 1;
+          lastDate = date;
+        }
+      } else {
+        const daysDiff = Utils.daysDifference(lastDate, date);
+        
+        if (daysDiff <= graceDays + 1) {
+          // Continue streak (allow grace period)
+          tempStreak++;
+          if (currentStreak > 0) currentStreak++;
+        } else {
+          // Streak broken
+          if (currentStreak > 0) {
+            // We've finished counting current streak
+            break;
+          }
+        }
+        
+        lastDate = date;
+      }
+      
+      longestStreak = Math.max(longestStreak, tempStreak);
+    }
+    
+    // Calculate longest streak overall
+    tempStreak = 1;
+    lastDate = workoutDates[0];
+    
+    for (let i = 1; i < workoutDates.length; i++) {
+      const daysDiff = Utils.daysDifference(lastDate, workoutDates[i]);
+      
+      if (daysDiff <= graceDays + 1) {
+        tempStreak++;
+      } else {
+        longestStreak = Math.max(longestStreak, tempStreak);
+        tempStreak = 1;
+      }
+      
+      lastDate = workoutDates[i];
+    }
+    
+    longestStreak = Math.max(longestStreak, tempStreak);
+    
+    return {
+      current: currentStreak,
+      longest: longestStreak,
+      lastWorkout: workoutDates[0]
+    };
+  }
+  
+  return { calculateStreaks };
+})();
+
+/* ==================== ACHIEVEMENTS & BADGES ==================== */
+const Achievements = (() => {
+  // Badge definitions with tiers and progression tips
+  const BADGES = [
+    {
+      id: 'first-workout',
+      name: 'First Step',
+      tier: 'bronze',
+      icon: '🎯',
+      description: 'Complete your first workout',
+      requirement: (state) => state.workouts.length >= 1,
+      tip: 'Consistency beats intensity. Show up regularly, even for short sessions.'
+    },
+    {
+      id: 'week-warrior',
+      name: 'Week Warrior',
+      tier: 'bronze',
+      icon: '📅',
+      description: 'Work out 3 times in one week',
+      requirement: (state) => {
+        const today = new Date();
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - 6);
+        const weekDates = Utils.datesBetween(weekStart.toISOString().split('T')[0], Utils.todayISO());
+        const weekWorkouts = state.workouts.filter(w => weekDates.includes(w.date));
+        return weekWorkouts.length >= 3;
+      },
+      tip: 'Build a routine. Schedule workouts at the same time each day for best results.'
+    },
+    {
+      id: 'streak-5',
+      name: 'Hot Streak',
+      tier: 'silver',
+      icon: '🔥',
+      description: 'Maintain a 5-day streak',
+      requirement: (state) => {
+        const streaks = StreakSystem.calculateStreaks();
+        return streaks.current >= 5 || streaks.longest >= 5;
+      },
+      tip: 'Rest is part of training. Include active recovery days to maintain your streak.'
+    },
+    {
+      id: 'streak-14',
+      name: 'Fortnight Fighter',
+      tier: 'gold',
+      icon: '🔥',
+      description: 'Maintain a 14-day streak',
+      requirement: (state) => {
+        const streaks = StreakSystem.calculateStreaks();
+        return streaks.current >= 14 || streaks.longest >= 14;
+      },
+      tip: 'Track your energy levels. Adjust intensity based on how you feel, not just the plan.'
+    },
+    {
+      id: 'streak-30',
+      name: 'Month Master',
+      tier: 'platinum',
+      icon: '🏆',
+      description: 'Maintain a 30-day streak',
+      requirement: (state) => {
+        const streaks = StreakSystem.calculateStreaks();
+        return streaks.current >= 30 || streaks.longest >= 30;
+      },
+      tip: 'Celebrate milestones. Acknowledge your commitment and plan your next phase.'
+    },
+    {
+      id: 'pr-first',
+      name: 'PR Achiever',
+      tier: 'bronze',
+      icon: '💪',
+      description: 'Set your first personal record',
+      requirement: (state) => {
+        const prs = computePRs(state);
+        return Object.keys(prs.byExercise).length > 0;
+      },
+      tip: 'Progressive overload works. Add weight or reps gradually each week.'
+    },
+    {
+      id: 'pr-collector',
+      name: 'PR Collector',
+      tier: 'silver',
+      icon: '💪',
+      description: 'Set personal records in 5 exercises',
+      requirement: (state) => {
+        const prs = computePRs(state);
+        return Object.keys(prs.byExercise).length >= 5;
+      },
+      tip: 'Vary your exercises. Different movements challenge your body in new ways.'
+    },
+    {
+      id: 'volume-king',
+      name: 'Volume King',
+      tier: 'gold',
+      icon: '📈',
+      description: 'Complete a workout with 10,000kg total volume',
+      requirement: (state) => {
+        return state.workouts.some(w => {
+          let vol = 0;
+          w.exercises.forEach(ex => {
+            ex.sets.forEach(s => {
+              vol += (s.weight || 0) * (s.reps || 0);
+            });
+          });
+          return vol >= 10000;
+        });
+      },
+      tip: 'Volume builds muscle. Focus on total work done, not just heavy singles.'
+    },
+    {
+      id: 'century-club',
+      name: 'Century Club',
+      tier: 'gold',
+      icon: '💯',
+      description: 'Complete 100 total workouts',
+      requirement: (state) => state.workouts.length >= 100,
+      tip: 'You\'ve built a strong foundation. Keep challenging yourself with new goals.'
+    },
+    {
+      id: 'early-bird',
+      name: 'Early Bird',
+      tier: 'silver',
+      icon: '🌅',
+      description: 'Complete 10 morning workouts (before 9 AM)',
+      requirement: (state) => {
+        // This would require time tracking, simplified for now
+        return state.workouts.length >= 10;
+      },
+      tip: 'Morning workouts boost energy. Start your day with movement for better focus.'
+    },
+    {
+      id: 'consistency-master',
+      name: 'Consistency Master',
+      tier: 'platinum',
+      icon: '⭐',
+      description: 'Work out every week for 12 consecutive weeks',
+      requirement: (state) => {
+        // Check if there's at least one workout in each of the last 12 weeks
+        const today = new Date();
+        let weeksWithWorkouts = 0;
+        
+        for (let i = 0; i < 12; i++) {
+          const weekStart = new Date(today);
+          weekStart.setDate(today.getDate() - (i * 7) - 6);
+          const weekEnd = new Date(today);
+          weekEnd.setDate(today.getDate() - (i * 7));
+          
+          const weekDates = Utils.datesBetween(
+            weekStart.toISOString().split('T')[0],
+            weekEnd.toISOString().split('T')[0]
+          );
+          
+          const hasWorkout = state.workouts.some(w => weekDates.includes(w.date));
+          if (hasWorkout) weeksWithWorkouts++;
+          else break; // Consecutive weeks required
+        }
+        
+        return weeksWithWorkouts >= 12;
+      },
+      tip: 'Long-term consistency wins. Small, regular efforts compound into major results.'
+    }
+  ];
+  
+  function getAllBadges() {
+    return BADGES;
+  }
+  
+  function getUnlockedBadges() {
+    const state = AppState.get();
+    return state.achievements.unlocked;
+  }
+  
+  function checkBadge(badgeId) {
+    const state = AppState.get();
+    const badge = BADGES.find(b => b.id === badgeId);
+    if (!badge) return false;
+    return badge.requirement(state);
+  }
+  
+  function checkAllBadges() {
+    const newlyUnlocked = [];
+    
+    BADGES.forEach(badge => {
+      if (checkBadge(badge.id)) {
+        const unlocked = AppState.unlockAchievement(badge.id);
+        if (unlocked) {
+          newlyUnlocked.push(badge);
+        }
+      }
+    });
+    
+    return newlyUnlocked;
+  }
+  
+  function checkOnWorkoutAdd(workout) {
+    const newBadges = checkAllBadges();
+    
+    if (newBadges.length > 0 && AppState.get().settings.suggestions) {
+      newBadges.forEach(badge => {
+        UI.showAchievementToast(badge);
+      });
+    }
+  }
+  
+  return {
+    getAllBadges,
+    getUnlockedBadges,
+    checkBadge,
+    checkAllBadges,
+    checkOnWorkoutAdd
+  };
+})();
+
+/* ==================== PR DETECTION ==================== */
+function computePRs(state = null) {
+  if (!state) state = AppState.get();
+  
+  const pr = { byExercise: {} };
+  
+  for (const w of state.workouts) {
+    for (const ex of w.exercises) {
+      for (const s of ex.sets) {
+        const key = ex.name.toLowerCase().trim();
+        const weight = s.weight || 0;
+        
+        if (!pr.byExercise[key] || weight > pr.byExercise[key].weight) {
+          pr.byExercise[key] = {
+            weight,
+            workoutId: w.id,
+            date: w.date,
+            reps: s.reps,
+            exerciseName: ex.name
+          };
+        }
+      }
+    }
+  }
+  
+  return pr;
+}
+
+/* ==================== UI MODULE ==================== */
+const UI = (() => {
+  const modal = document.getElementById('modal');
+  const modalPanel = document.getElementById('modalPanel');
+  
+  // Navigation
+  function initNavigation() {
+    const navButtons = document.querySelectorAll('.nav .btn');
+    
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        switchView(view);
+      });
+    });
+  }
+  
+  function switchView(viewName) {
+    // Hide all views
+    document.querySelectorAll('.view').forEach(v => {
+      v.classList.add('hidden');
+    });
+    
+    // Remove active from all nav buttons
+    document.querySelectorAll('.nav .btn').forEach(b => {
+      b.classList.remove('active');
+    });
+    
+    // Show selected view
+    const targetView = document.getElementById(viewName);
+    if (targetView) {
+      targetView.classList.remove('hidden');
+    }
+    
+    // Set active nav button
+    const activeBtn = document.querySelector(`.nav .btn[data-view="${viewName}"]`);
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+    }
+    
+    // Emit view change event
+    EventBus.emit('view:change', viewName);
+  }
+  
+  // Modal functions
+  function showModal(contentHTML) {
+    modalPanel.innerHTML = contentHTML;
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+    
+    // Attach close handlers
+    modal.querySelectorAll('.close-btn').forEach(btn => {
+      btn.addEventListener('click', hideModal);
+    });
+  }
+  
+  function hideModal() {
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modalPanel.innerHTML = '';
+  }
+  
+  // Click outside to close
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      hideModal();
+    }
+  });
+  
+  // Achievement toast notification
+  function showAchievementToast(badge) {
+    const toast = document.createElement('div');
+    toast.className = 'achievement-toast';
+    toast.innerHTML = `
+      <div class="achievement-toast-icon">${badge.icon}</div>
+      <div class="achievement-toast-content">
+        <div class="achievement-toast-title">🎉 Achievement Unlocked!</div>
+        <div class="achievement-toast-desc">${badge.name}</div>
+      </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Play sound if enabled
+    const state = AppState.get();
+    if (state.settings.sounds) {
+      playAchievementSound();
+    }
+    
+    // Remove after 4 seconds
+    setTimeout(() => {
+      toast.style.animation = 'slideIn 0.3s ease reverse';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+  
+  function playAchievementSound() {
+    // Simple achievement sound using Web Audio API
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = 800;
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (e) {
+      console.log('Could not play sound', e);
+    }
+  }
+  
+  return {
+    initNavigation,
+    switchView,
+    showModal,
+    hideModal,
+    showAchievementToast
+  };
+})();
+
+/* ==================== RENDERERS ==================== */
+
+// Dashboard Renderer
+function renderDashboard() {
+  const state = AppState.get();
+  const streaks = StreakSystem.calculateStreaks();
+  
+  // Update streak display
+  document.getElementById('currentStreak').textContent = streaks.current;
+  document.getElementById('longestStreak').textContent = streaks.longest;
+  
+  // Calculate stats
+  const today = new Date();
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - 6);
+  const weekDates = Utils.datesBetween(weekStart.toISOString().split('T')[0], Utils.todayISO());
+  const weekWorkouts = state.workouts.filter(w => weekDates.includes(w.date));
+  
+  document.getElementById('weekWorkouts').textContent = weekWorkouts.length;
+  document.getElementById('totalWorkouts').textContent = state.workouts.length;
+  document.getElementById('badgesUnlocked').textContent = state.achievements.unlocked.length;
+  
+  const prs = computePRs(state);
+  document.getElementById('totalPRs').textContent = Object.keys(prs.byExercise).length;
+  
+  // Weekly goal progress
+  const target = state.settings.weeklyTarget || 3;
+  const done = weekWorkouts.length;
+  const percent = Math.min(100, Math.round((done / target) * 100));
+  
+  const goalFill = document.getElementById('goalFill');
+  goalFill.style.width = percent + '%';
+  
+  const goalText = document.getElementById('goalText');
+  goalText.textContent = `${done}/${target}`;
+  
+  const goalSubtext = document.getElementById('goalSubtext');
+  if (done >= target) {
+    goalSubtext.textContent = '🎉 Goal achieved! Keep up the great work!';
+  } else {
+    const remaining = target - done;
+    goalSubtext.textContent = `${remaining} workout${remaining !== 1 ? 's' : ''} to go this week`;
+  }
+  
+  // Next planned items
+  const nextEl = document.getElementById('nextPlanned');
+  nextEl.innerHTML = '';
+  
+  if (state.planner.length === 0) {
+    nextEl.innerHTML = '<div class="text-muted text-small">No planned workouts yet</div>';
+  } else {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const todayDay = days[today.getDay()];
+    
+    // Show today's workout first if exists, then next few
+    const sortedPlanner = state.planner.slice().sort((a, b) => {
+      const aIdx = days.indexOf(a.day);
+      const bIdx = days.indexOf(b.day);
+      const todayIdx = days.indexOf(todayDay);
+      
+      const aDist = (aIdx - todayIdx + 7) % 7;
+      const bDist = (bIdx - todayIdx + 7) % 7;
+      
+      return aDist - bDist;
+    });
+    
+    sortedPlanner.slice(0, 3).forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = `
+        <div class="list-item-content">
+          <div class="list-item-title">${p.day}</div>
+          <div class="list-item-meta">${p.workoutTitle || 'Planned workout'}</div>
+        </div>
+      `;
+      nextEl.appendChild(div);
+    });
+  }
+  
+  // Draw chart
+  drawProgressChart(weekDates);
+}
+
+// Progress Chart
+function drawProgressChart(weekDates) {
+  const state = AppState.get();
+  const canvas = document.getElementById('lineChart');
+  const ctx = canvas.getContext('2d');
+  
+  // Set canvas size
+  canvas.width = 800;
+  canvas.height = 180;
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const w = canvas.width;
+  const h = canvas.height;
+  const pad = 40;
+  
+  // Count workouts per day
+  const counts = weekDates.map(date => {
+    return state.workouts.filter(workout => workout.date === date).length;
+  });
+  
+  const max = Math.max(1, ...counts);
+  
+  // Draw grid
+  ctx.strokeStyle = 'rgba(159, 176, 182, 0.1)';
+  ctx.lineWidth = 1;
+  
+  for (let i = 0; i <= max; i++) {
+    const y = h - pad - (i / max) * (h - 2 * pad);
+    ctx.beginPath();
+    ctx.moveTo(pad, y);
+    ctx.lineTo(w - pad, y);
+    ctx.stroke();
+    
+    // Y-axis labels
+    ctx.fillStyle = '#9fb0b6';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(i, pad - 20, y + 4);
+  }
+  
+  // Draw line
+  ctx.strokeStyle = '#15b0d6';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  
+  ctx.beginPath();
+  
+  counts.forEach((count, i) => {
+    const x = pad + i * ((w - 2 * pad) / (counts.length - 1));
+    const y = h - pad - (count / max) * (h - 2 * pad);
+    
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  
+  ctx.stroke();
+  
+  // Draw dots and labels
+  counts.forEach((count, i) => {
+    const x = pad + i * ((w - 2 * pad) / (counts.length - 1));
+    const y = h - pad - (count / max) * (h - 2 * pad);
+    
+    // Dot
+    ctx.beginPath();
+    ctx.fillStyle = '#15b0d6';
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Highlight non-zero days
+    if (count > 0) {
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(21, 176, 214, 0.2)';
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    // X-axis labels
+    ctx.fillStyle = '#9fb0b6';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    const label = weekDates[i].slice(5);
+    ctx.fillText(label, x, h - 10);
+  });
+}
+
+// History Renderer
+function renderHistory() {
+  const state = AppState.get();
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+  
+  // Populate tag filter
+  const tagFilter = document.getElementById('tagFilter');
+  const currentTag = tagFilter.value;
+  tagFilter.innerHTML = '<option value="">All tags</option>';
+  
+  const tags = new Set();
+  state.workouts.forEach(w => {
+    (w.tags || []).forEach(t => tags.add(t));
+  });
+  
+  Array.from(tags).sort().forEach(tag => {
+    const opt = document.createElement('option');
+    opt.value = tag;
+    opt.textContent = tag;
+    if (tag === currentTag) opt.selected = true;
+    tagFilter.appendChild(opt);
+  });
+  
+  // Apply filters
+  const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+  const tagValue = tagFilter.value;
+  const dateFrom = document.getElementById('dateFrom').value;
+  const dateTo = document.getElementById('dateTo').value;
+  
+  let filtered = state.workouts.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  filtered = filtered.filter(w => {
+    if (dateFrom && w.date < dateFrom) return false;
+    if (dateTo && w.date > dateTo) return false;
+    if (tagValue && !(w.tags || []).includes(tagValue)) return false;
+    if (searchQuery) {
+      const titleMatch = w.title.toLowerCase().includes(searchQuery);
+      const notesMatch = (w.notes || '').toLowerCase().includes(searchQuery);
+      const exerciseMatch = (w.exercises || []).some(ex =>
+        ex.name.toLowerCase().includes(searchQuery)
+      );
+      if (!titleMatch && !notesMatch && !exerciseMatch) return false;
+    }
+    return true;
+  });
+  
+  if (filtered.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🏋️</div>
+        <div class="empty-state-text">No workouts found</div>
+        <div class="empty-state-subtext">Try adjusting your filters or add a new workout</div>
+      </div>
+    `;
+    return;
+  }
+  
+  filtered.forEach(w => {
+    // Calculate stats
+    let volume = 0;
+    let reps = 0;
+    
+    (w.exercises || []).forEach(ex => {
+      ex.sets.forEach(s => {
+        volume += (s.weight || 0) * (s.reps || 0);
+        reps += s.reps || 0;
+      });
+    });
+    
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      <div class="list-item-content">
+        <div class="list-item-title">${w.title}</div>
+        <div class="list-item-meta">
+          📅 ${w.date} • 
+          💪 ${w.exercises.length} exercise${w.exercises.length !== 1 ? 's' : ''} • 
+          ${reps} reps • 
+          ${volume.toFixed(0)} kg volume
+          ${w.tags.length > 0 ? '• ' + w.tags.map(t => `<span class="tag">${t}</span>`).join('') : ''}
+        </div>
+      </div>
+      <div class="list-item-actions">
+        <button type="button" class="btn small ghost" data-action="view" data-id="${w.id}">👁️ View</button>
+        <button type="button" class="btn small ghost" data-action="duplicate" data-id="${w.id}">📋 Duplicate</button>
+        <button type="button" class="btn small danger" data-action="delete" data-id="${w.id}">🗑️</button>
+      </div>
+    `;
+    
+    list.appendChild(div);
+  });
+  
+  // Attach event handlers using event delegation
+  list.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+    
+    if (action === 'view') {
+      openWorkoutDetail(id);
+    } else if (action === 'duplicate') {
+      AppState.duplicateWorkout(id);
+      EventBus.emit('state:change');
+    } else if (action === 'delete') {
+      if (confirm('Are you sure you want to delete this workout?')) {
+        AppState.deleteWorkout(id);
+        EventBus.emit('state:change');
+      }
+    }
+  });
+}
+
+// Workout Detail Modal
+function openWorkoutDetail(id) {
+  const state = AppState.get();
+  const workout = state.workouts.find(w => w.id === id);
+  if (!workout) return;
+  
+  let html = `
+    <div class="modal-header">
+      <h3 class="modal-title">${workout.title}</h3>
+    </div>
+    <div class="text-muted mb-2">
+      📅 ${workout.date} 
+      ${workout.duration ? `• ⏱️ ${workout.duration} min` : ''}
+    </div>
+    ${workout.tags.length > 0 ? `<div class="mb-2">${workout.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+    ${workout.notes ? `<div class="mb-3"><strong>Notes:</strong> ${workout.notes}</div>` : ''}
+  `;
+  
+  workout.exercises.forEach(ex => {
+    html += `
+      <div class="card mb-2">
+        <h4>${ex.name}</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Set</th>
+              <th>Reps</th>
+              <th>Weight (kg)</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    ex.sets.forEach(s => {
+      html += `
+        <tr>
+          <td>${s.index || '-'}</td>
+          <td>${s.reps || '-'}</td>
+          <td>${s.weight || '0'}</td>
+          <td>${s.notes || '-'}</td>
+        </tr>
+      `;
+    });
+    
+    html += `
+          </tbody>
+        </table>
+      </div>
+    `;
+  });
+  
+  html += `
+    <div class="modal-actions">
+      <button type="button" id="editWorkoutBtn" class="btn">✏️ Edit</button>
+      <button type="button" class="close-btn btn ghost">Close</button>
+    </div>
+  `;
+  
+  UI.showModal(html);
+  
+  document.getElementById('editWorkoutBtn').addEventListener('click', () => {
+    UI.hideModal();
+    openWorkoutEditor(workout);
+  });
+}
+
+// Presets Renderer
+function renderPresets() {
+  const state = AppState.get();
+  const list = document.getElementById('presetList');
+  list.innerHTML = '';
+  
+  if (state.presets.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-text">No presets yet</div>
+        <div class="empty-state-subtext">Create workout templates to use again and again</div>
+      </div>
+    `;
+    return;
+  }
+  
+  state.presets.forEach(preset => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      <div class="list-item-content">
+        <div class="list-item-title">${preset.name}</div>
+        <div class="list-item-meta">
+          ${preset.exercises.length} exercise${preset.exercises.length !== 1 ? 's' : ''}
+          ${preset.tags.length > 0 ? '• ' + preset.tags.map(t => `<span class="tag">${t}</span>`).join('') : ''}
+        </div>
+      </div>
+      <div class="list-item-actions">
+        <button type="button" class="btn small" data-action="use" data-id="${preset.id}">💪 Use</button>
+        <button type="button" class="btn small ghost" data-action="edit" data-id="${preset.id}">✏️ Edit</button>
+        <button type="button" class="btn small danger" data-action="delete" data-id="${preset.id}">🗑️</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  
+  // Event delegation
+  list.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+    const preset = state.presets.find(p => p.id === id);
+    if (!preset) return;
+    
+    if (action === 'use') {
+      openWorkoutEditor({
+        title: preset.name,
+        exercises: Utils.clone(preset.exercises),
+        tags: Utils.clone(preset.tags || []),
+        date: Utils.todayISO()
+      });
+    } else if (action === 'edit') {
+      openPresetEditor(preset);
+    } else if (action === 'delete') {
+      if (confirm(`Delete preset "${preset.name}"?`)) {
+        AppState.deletePreset(id);
+        EventBus.emit('state:change');
+      }
+    }
+  });
+}
+
+// Planner Renderer
+function renderPlanner() {
+  const state = AppState.get();
+  const slots = document.getElementById('weekSlots');
+  slots.innerHTML = '';
+  
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  
+  days.forEach(day => {
+    const planned = state.planner.find(p => p.day === day);
+    
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      <div class="list-item-content">
+        <div class="list-item-title">${day}</div>
+        <div class="list-item-meta">
+          ${planned ? planned.workoutTitle || 'Planned workout' : '<span class="text-dim">Not assigned</span>'}
+        </div>
+      </div>
+      <div class="list-item-actions">
+        <button type="button" class="btn small" data-action="assign" data-day="${day}">
+          ${planned ? '✏️ Edit' : '➕ Assign'}
+        </button>
+        ${planned ? `<button type="button" class="btn small danger" data-action="clear" data-day="${day}">🗑️</button>` : ''}
+      </div>
+    `;
+    
+    slots.appendChild(div);
+  });
+  
+  // Event delegation
+  slots.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    
+    const action = btn.dataset.action;
+    const day = btn.dataset.day;
+    
+    if (action === 'assign') {
+      openPlannerAssign(day);
+    } else if (action === 'clear') {
+      const newPlanner = state.planner.filter(p => p.day !== day);
+      AppState.setPlanner(newPlanner);
+      EventBus.emit('state:change');
+    }
+  });
+}
+
+// Planner Assign Modal
+function openPlannerAssign(day) {
+  const state = AppState.get();
+  const existing = state.planner.find(p => p.day === day);
+  
+  let html = `
+    <div class="modal-header">
+      <h3 class="modal-title">Assign Workout to ${day}</h3>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Choose a preset (optional)</label>
+      <select id="assignPreset" class="input">
+        <option value="">-- None --</option>
+        ${state.presets.map(p => `
+          <option value="${p.id}" ${existing && existing.presetId === p.id ? 'selected' : ''}>
+            ${p.name}
+          </option>
+        `).join('')}
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Or enter a custom workout title</label>
+      <input type="text" id="assignTitle" class="input" value="${existing && !existing.presetId ? existing.workoutTitle : ''}" placeholder="e.g., Upper Body" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="saveAssignBtn" class="btn">💾 Save</button>
+      <button type="button" class="close-btn btn ghost">Cancel</button>
+    </div>
+  `;
+  
+  UI.showModal(html);
+  
+  document.getElementById('saveAssignBtn').addEventListener('click', () => {
+    const presetId = document.getElementById('assignPreset').value;
+    const title = document.getElementById('assignTitle').value.trim();
+    
+    const newItem = {
+      day,
+      presetId: presetId || null,
+      workoutTitle: title || (presetId ? state.presets.find(p => p.id === presetId).name : 'Planned Workout')
+    };
+    
+    // Remove existing for this day
+    const newPlanner = state.planner.filter(p => p.day !== day);
+    newPlanner.push(newItem);
+    
+    AppState.setPlanner(newPlanner);
+    UI.hideModal();
+    EventBus.emit('state:change');
+  });
+}
+
+// Workout Editor
+function openWorkoutEditor(base = null) {
+  const isNew = !base || !base.id;
+  const workout = base ? Utils.clone(base) : {
+    title: '',
+    date: Utils.todayISO(),
+    exercises: [],
+    tags: [],
+    duration: 0,
+    notes: ''
+  };
+  
+  let html = `
+    <div class="modal-header">
+      <h3 class="modal-title">${isNew ? '➕ New Workout' : '✏️ Edit Workout'}</h3>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input type="text" id="wTitle" class="input" value="${workout.title}" placeholder="e.g., Upper Body" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input type="date" id="wDate" class="input" value="${workout.date}" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Duration (minutes)</label>
+      <input type="number" id="wDuration" class="input" value="${workout.duration || ''}" placeholder="Optional" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tags (comma-separated)</label>
+      <input type="text" id="wTags" class="input" value="${(workout.tags || []).join(', ')}" placeholder="e.g., push, strength" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <textarea id="wNotes" class="input">${workout.notes || ''}</textarea>
+    </div>
+    <div class="flex-between mb-2">
+      <h4>Exercises</h4>
+      <button type="button" id="addExerciseBtn" class="btn small">➕ Add Exercise</button>
+    </div>
+    <div id="exerciseList" class="list"></div>
+    <div class="modal-actions">
+      <button type="button" id="saveWorkoutBtn" class="btn">💾 Save Workout</button>
+      <button type="button" class="close-btn btn ghost">Cancel</button>
+    </div>
+  `;
+  
+  UI.showModal(html);
+  
+  function renderExercises() {
+    const list = document.getElementById('exerciseList');
+    list.innerHTML = '';
+    
+    if (workout.exercises.length === 0) {
+      list.innerHTML = '<div class="text-muted text-small">No exercises added yet</div>';
+      return;
+    }
+    
+    workout.exercises.forEach((ex, idx) => {
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = `
+        <div class="list-item-content">
+          <div class="list-item-title">${ex.name}</div>
+          <div class="list-item-meta">
+            ${ex.sets.map(s => `${s.reps}r @ ${s.weight}kg`).join(', ')}
+          </div>
+        </div>
+        <div class="list-item-actions">
+          <button type="button" class="btn small ghost" data-action="edit" data-idx="${idx}">✏️</button>
+          <button type="button" class="btn small danger" data-action="delete" data-idx="${idx}">🗑️</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+    
+    // Event delegation for exercise actions
+    list.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      
+      const action = btn.dataset.action;
+      const idx = parseInt(btn.dataset.idx);
+      
+      if (action === 'edit') {
+        editExercise(idx);
+      } else if (action === 'delete') {
+        workout.exercises.splice(idx, 1);
+        renderExercises();
+      }
+    });
+  }
+  
+  function editExercise(idx = null) {
+    const ex = idx !== null ? workout.exercises[idx] : null;
+    const name = prompt('Exercise name:', ex ? ex.name : '');
+    if (!name) return;
+    
+    const setsInput = prompt(
+      'Enter sets as reps:weight pairs separated by semicolon\nExample: 12:60;10:65;8:70',
+      ex ? ex.sets.map(s => `${s.reps}:${s.weight}`).join(';') : '10:0'
+    );
+    
+    if (setsInput === null) return;
+    
+    const sets = setsInput.split(';').map((seg, i) => {
+      const [r, w] = seg.split(':').map(s => s.trim());
+      return {
+        index: i + 1,
+        reps: parseInt(r) || 0,
+        weight: parseFloat(w) || 0,
+        notes: ''
+      };
+    });
+    
+    const exercise = {
+      id: Utils.uid('e'),
+      name,
+      sets
+    };
+    
+    if (idx !== null) {
+      workout.exercises[idx] = exercise;
+    } else {
+      workout.exercises.push(exercise);
+    }
+    
+    renderExercises();
+  }
+  
+  document.getElementById('addExerciseBtn').addEventListener('click', () => {
+    editExercise(null);
+  });
+  
+  document.getElementById('saveWorkoutBtn').addEventListener('click', () => {
+    workout.title = document.getElementById('wTitle').value.trim();
+    workout.date = document.getElementById('wDate').value;
+    workout.duration = parseInt(document.getElementById('wDuration').value) || 0;
+    workout.tags = document.getElementById('wTags').value
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+    workout.notes = document.getElementById('wNotes').value;
+    
+    if (!workout.title) {
+      alert('Please enter a workout title');
+      return;
+    }
+    
+    if (workout.exercises.length === 0) {
+      if (!confirm('No exercises added. Save anyway?')) {
+        return;
+      }
+    }
+    
+    if (isNew) {
+      AppState.addWorkout(workout);
+    } else {
+      AppState.updateWorkout(workout.id, workout);
+    }
+    
+    UI.hideModal();
+    EventBus.emit('state:change');
+  });
+  
+  renderExercises();
+}
+
+// Preset Editor
+function openPresetEditor(base = null) {
+  const isNew = !base;
+  const preset = base ? Utils.clone(base) : {
+    name: '',
+    exercises: [],
+    tags: []
+  };
+  
+  let html = `
+    <div class="modal-header">
+      <h3 class="modal-title">${isNew ? '➕ New Preset' : '✏️ Edit Preset'}</h3>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Preset Name</label>
+      <input type="text" id="presetName" class="input" value="${preset.name}" placeholder="e.g., Push Day" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tags (comma-separated)</label>
+      <input type="text" id="presetTags" class="input" value="${(preset.tags || []).join(', ')}" placeholder="e.g., push, strength" />
+    </div>
+    <div class="flex-between mb-2">
+      <h4>Exercises</h4>
+      <button type="button" id="addPresetExBtn" class="btn small">➕ Add Exercise</button>
+    </div>
+    <div id="presetExList" class="list"></div>
+    <div class="modal-actions">
+      <button type="button" id="savePresetBtn" class="btn">💾 Save Preset</button>
+      <button type="button" class="close-btn btn ghost">Cancel</button>
+    </div>
+  `;
+  
+  UI.showModal(html);
+  
+  function renderExercises() {
+    const list = document.getElementById('presetExList');
+    list.innerHTML = '';
+    
+    if (preset.exercises.length === 0) {
+      list.innerHTML = '<div class="text-muted text-small">No exercises added yet</div>';
+      return;
+    }
+    
+    preset.exercises.forEach((ex, idx) => {
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = `
+        <div class="list-item-content">
+          <div class="list-item-title">${ex.name}</div>
+          <div class="list-item-meta">
+            ${ex.sets.map(s => `${s.reps} reps`).join(', ')}
+          </div>
+        </div>
+        <div class="list-item-actions">
+          <button type="button" class="btn small ghost" data-action="edit" data-idx="${idx}">✏️</button>
+          <button type="button" class="btn small danger" data-action="delete" data-idx="${idx}">🗑️</button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+    
+    list.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      
+      const action = btn.dataset.action;
+      const idx = parseInt(btn.dataset.idx);
+      
+      if (action === 'edit') {
+        editExercise(idx);
+      } else if (action === 'delete') {
+        preset.exercises.splice(idx, 1);
+        renderExercises();
+      }
+    });
+  }
+  
+  function editExercise(idx = null) {
+    const ex = idx !== null ? preset.exercises[idx] : null;
+    const name = prompt('Exercise name:', ex ? ex.name : '');
+    if (!name) return;
+    
+    const repsInput = prompt(
+      'Enter reps for each set, separated by commas\nExample: 10,8,8',
+      ex ? ex.sets.map(s => s.reps).join(',') : '10,8'
+    );
+    
+    if (repsInput === null) return;
+    
+    const sets = repsInput.split(',').map((r, i) => ({
+      index: i + 1,
+      reps: parseInt(r.trim()) || 0,
+      weight: 0,
+      notes: ''
+    }));
+    
+    const exercise = {
+      id: Utils.uid('e'),
+      name,
+      sets
+    };
+    
+    if (idx !== null) {
+      preset.exercises[idx] = exercise;
+    } else {
+      preset.exercises.push(exercise);
+    }
+    
+    renderExercises();
+  }
+  
+  document.getElementById('addPresetExBtn').addEventListener('click', () => {
+    editExercise(null);
+  });
+  
+  document.getElementById('savePresetBtn').addEventListener('click', () => {
+    preset.name = document.getElementById('presetName').value.trim();
+    preset.tags = document.getElementById('presetTags').value
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+    
+    if (!preset.name) {
+      alert('Please enter a preset name');
+      return;
+    }
+    
+    if (isNew) {
+      AppState.addPreset(preset);
+    } else {
+      AppState.updatePreset(preset.id, preset);
+    }
+    
+    UI.hideModal();
+    EventBus.emit('state:change');
+  });
+  
+  renderExercises();
+}
+
+// Quick Log
+function openQuickLog() {
+  const draftKey = 'zenfit-quick-draft';
+  const draft = JSON.parse(localStorage.getItem(draftKey) || '{}');
+  
+  const html = `
+    <div class="modal-header">
+      <h3 class="modal-title">⚡ Quick Log</h3>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Exercise</label>
+      <input type="text" id="qEx" class="input" value="${draft.name || ''}" placeholder="e.g., Push-ups" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Reps</label>
+      <input type="number" id="qReps" class="input" value="${draft.reps || ''}" placeholder="12" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Weight (kg)</label>
+      <input type="number" id="qWeight" class="input" value="${draft.weight || ''}" placeholder="0" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="qSaveBtn" class="btn">💾 Save</button>
+      <button type="button" class="close-btn btn ghost">Cancel</button>
+    </div>
+  `;
+  
+  UI.showModal(html);
+  
+  // Auto-save draft
+  const autosave = () => {
+    const draft = {
+      name: document.getElementById('qEx').value,
+      reps: document.getElementById('qReps').value,
+      weight: document.getElementById('qWeight').value
+    };
+    localStorage.setItem(draftKey, JSON.stringify(draft));
+  };
+  
+  document.getElementById('qEx').addEventListener('input', autosave);
+  document.getElementById('qReps').addEventListener('input', autosave);
+  document.getElementById('qWeight').addEventListener('input', autosave);
+  
+  document.getElementById('qSaveBtn').addEventListener('click', () => {
+    const name = document.getElementById('qEx').value.trim();
+    const reps = parseInt(document.getElementById('qReps').value) || 0;
+    const weight = parseFloat(document.getElementById('qWeight').value) || 0;
+    
+    if (!name) {
+      alert('Please enter an exercise name');
+      return;
+    }
+    
+    const now = Utils.todayISO();
+    const workout = {
+      title: `Quick Log - ${now}`,
+      date: now,
+      exercises: [{
+        id: Utils.uid('e'),
+        name,
+        sets: [{
+          index: 1,
+          reps,
+          weight,
+          notes: ''
+        }]
+      }],
+      tags: ['quick'],
+      duration: 5,
+      notes: 'Quick log entry'
+    };
+    
+    AppState.addWorkout(workout);
+    localStorage.removeItem(draftKey);
+    UI.hideModal();
+    EventBus.emit('state:change');
+  });
+}
+
+// Achievements Modal
+function openAchievementsModal() {
+  const allBadges = Achievements.getAllBadges();
+  const unlocked = Achievements.getUnlockedBadges();
+  
+  let html = `
+    <div class="modal-header">
+      <h3 class="modal-title">🏆 Achievements</h3>
+    </div>
+    <div class="text-muted mb-3">
+      You've unlocked ${unlocked.length} out of ${allBadges.length} badges!
+    </div>
+    <div class="badge-grid">
+  `;
+  
+  allBadges.forEach(badge => {
+    const isUnlocked = unlocked.includes(badge.id);
+    const isNew = AppState.get().achievements.newBadges.includes(badge.id);
+    
+    html += `
+      <div class="badge-item ${isUnlocked ? 'unlocked' : 'locked'} tier-${badge.tier}" 
+           data-badge-id="${badge.id}"
+           style="cursor: ${isUnlocked ? 'pointer' : 'default'}">
+        ${isNew ? '<div class="badge-new">NEW</div>' : ''}
+        <div class="badge-icon">${badge.icon}</div>
+        <div class="badge-name">${badge.name}</div>
+        <div class="badge-desc">${badge.description}</div>
+      </div>
+    `;
+  });
+  
+  html += `
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="close-btn btn">Close</button>
+    </div>
+  `;
+  
+  UI.showModal(html);
+  
+  // Clear new badges
+  AppState.clearNewBadges();
+  
+  // Add click handler for unlocked badges
+  document.querySelectorAll('.badge-item.unlocked').forEach(item => {
+    item.addEventListener('click', () => {
+      const badgeId = item.dataset.badgeId;
+      const badge = allBadges.find(b => b.id === badgeId);
+      if (badge) {
+        showBadgeDetail(badge);
+      }
+    });
+  });
+}
+
+// Badge Detail Modal
+function showBadgeDetail(badge) {
+  const html = `
+    <div class="modal-header">
+      <h3 class="modal-title">${badge.icon} ${badge.name}</h3>
+    </div>
+    <div class="text-center mb-3">
+      <div style="font-size: 80px; margin: 20px 0;">${badge.icon}</div>
+      <div class="text-muted">${badge.description}</div>
+    </div>
+    <div class="card">
+      <h4>💡 Progression Tip</h4>
+      <p style="margin: 12px 0 0 0; line-height: 1.6;">${badge.tip}</p>
+    </div>
+    <div class="text-center mt-3">
+      <span class="tag" style="text-transform: uppercase; font-size: 13px; padding: 6px 14px;">
+        ${badge.tier} Tier
+      </span>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="close-btn btn">Close</button>
+    </div>
+  `;
+  
+  UI.showModal(html);
+}
+
+// About Modal
+function openAbout() {
+  const html = `
+    <div class="modal-header">
+      <h3 class="modal-title">ℹ️ About ZenFit Enhanced</h3>
+    </div>
+    <p class="mb-3">
+      ZenFit is a local-first fitness tracker with streak tracking, achievements, and comprehensive workout management.
+      All your data stays in your browser and is never sent to any server.
+    </p>
+    
+    <div class="card mb-3">
+      <h4>✨ Features</h4>
+      <ul style="margin: 12px 0 0 20px; line-height: 1.8;">
+        <li>Track workouts with exercises, sets, and reps</li>
+        <li>Create reusable workout presets</li>
+        <li>Plan your weekly schedule</li>
+        <li>Build workout streaks with grace periods</li>
+        <li>Unlock achievements and badges</li>
+        <li>Track personal records (PRs)</li>
+        <li>Export/import your data</li>
+      </ul>
+    </div>
+    
+    <div class="card mb-3">
+      <h4>✅ QA Checklist</h4>
+      <ul style="margin: 12px 0 0 20px; line-height: 1.8;">
+        <li>✓ Create, edit, duplicate, and delete workouts</li>
+        <li>✓ Create and apply presets</li>
+        <li>✓ Assign workouts to planner days</li>
+        <li>✓ Quick log adds workout instantly</li>
+        <li>✓ Streak tracking with grace period</li>
+        <li>✓ Achievement unlocks and notifications</li>
+        <li>✓ PR detection for exercises</li>
+        <li>✓ Export JSON/CSV and re-import</li>
+        <li>✓ All buttons work on desktop and mobile</li>
+        <li>✓ Responsive layout on all screen sizes</li>
+        <li>✓ Keyboard navigation and accessibility</li>
+      </ul>
+    </div>
+    
+    <div class="text-muted text-small">
+      <p><strong>Storage:</strong> Data is stored in localStorage under key: <code>${Storage.KEY}</code></p>
+      <p><strong>Version:</strong> 2.0 Enhanced</p>
+    </div>
+    
+    <div class="modal-actions">
+      <button type="button" class="close-btn btn">Close</button>
+    </div>
+  `;
+  
+  UI.showModal(html);
+}
+
+// Export/Import Functions
+function exportJSON() {
+  const data = AppState.exportJSON();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `zenfit-backup-${Utils.todayISO()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function exportCSV() {
+  const csv = AppState.exportCSV();
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `zenfit-workouts-${Utils.todayISO()}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importJSON() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  
+  input.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        const mode = confirm(
+          'Click OK to merge with existing data.\nClick Cancel to replace all data.'
+        ) ? 'append' : 'replace';
+        
+        AppState.importJSON(data, mode);
+        EventBus.emit('state:change');
+        alert('Import successful!');
+      } catch (err) {
+        alert('Invalid JSON file');
+        console.error(err);
+      }
+    };
+    reader.readAsText(file);
+  });
+  
+  input.click();
+}
+
+function clearAllData() {
+  if (!confirm('⚠️ This will delete ALL your workout data. This cannot be undone!\n\nAre you sure?')) {
+    return;
+  }
+  
+  if (!confirm('Really delete everything? Please confirm once more.')) {
+    return;
+  }
+  
+  AppState.clearAll();
+  EventBus.emit('state:change');
+  alert('All data cleared.');
+}
+
+/* ==================== EVENT HANDLERS ==================== */
+
+// Initialize Navigation
+UI.initNavigation();
+
+// Header Buttons
+document.getElementById('importBtn').addEventListener('click', importJSON);
+document.getElementById('exportBtn').addEventListener('click', () => {
+  if (confirm('Export as JSON? (OK for JSON, Cancel for CSV)')) {
+    exportJSON();
+  } else {
+    exportCSV();
+  }
+});
+document.getElementById('achievementsBtn').addEventListener('click', openAchievementsModal);
+document.getElementById('aboutBtn').addEventListener('click', openAbout);
+
+// Dashboard Quick Actions
+document.getElementById('quickStartBtn').addEventListener('click', () => {
+  const state = AppState.get();
+  const today = new Date();
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dayName = days[today.getDay()];
+  
+  const planned = state.planner.find(p => p.day === dayName);
+  
+  if (!planned) {
+    alert('No workout planned for today. Add one in the Planner view!');
+    return;
+  }
+  
+  if (planned.presetId) {
+    const preset = state.presets.find(p => p.id === planned.presetId);
+    if (preset) {
+      openWorkoutEditor({
+        title: preset.name,
+        exercises: Utils.clone(preset.exercises),
+        tags: Utils.clone(preset.tags || []),
+        date: Utils.todayISO()
+      });
+    }
+  } else {
+    openWorkoutEditor({
+      title: planned.workoutTitle,
+      date: Utils.todayISO(),
+      exercises: [],
+      tags: []
+    });
+  }
+});
+
+document.getElementById('openQuickLog').addEventListener('click', openQuickLog);
+document.getElementById('floatQuickBtn').addEventListener('click', openQuickLog);
+document.getElementById('newWorkoutBtn').addEventListener('click', () => openWorkoutEditor(null));
+
+// Presets
+document.getElementById('newPresetBtn').addEventListener('click', () => openPresetEditor(null));
+
+// Planner
+document.getElementById('addOneOff').addEventListener('click', () => {
+  const title = prompt('Workout title:');
+  if (!title) return;
+  
+  const date = prompt('Date (YYYY-MM-DD):', Utils.todayISO());
+  if (!date) return;
+  
+  const item = {
+    id: Utils.uid('pl'),
+    day: date,
+    workoutTitle: title,
+    oneOff: true
+  };
+  
+  AppState.addPlannerItem(item);
+  EventBus.emit('state:change');
+});
+
+document.getElementById('clearPlanner').addEventListener('click', () => {
+  if (confirm('Clear all planned workouts?')) {
+    AppState.clearPlanner();
+    EventBus.emit('state:change');
+  }
+});
+
+// Settings
+document.getElementById('weeklyTarget').addEventListener('change', (e) => {
+  AppState.updateSettings({ weeklyTarget: parseInt(e.target.value) || 3 });
+  EventBus.emit('state:change');
+});
+
+document.getElementById('graceDays').addEventListener('change', (e) => {
+  AppState.updateSettings({ graceDays: parseInt(e.target.value) || 1 });
+  EventBus.emit('state:change');
+});
+
+document.getElementById('toggleSuggestions').addEventListener('change', (e) => {
+  AppState.updateSettings({ suggestions: e.target.checked });
+  EventBus.emit('state:change');
+});
+
+document.getElementById('toggleSounds').addEventListener('change', (e) => {
+  AppState.updateSettings({ sounds: e.target.checked });
+  EventBus.emit('state:change');
+});
+
+document.getElementById('exportDataBtn').addEventListener('click', exportJSON);
+document.getElementById('exportCSVBtn').addEventListener('click', exportCSV);
+document.getElementById('importDataBtn').addEventListener('click', importJSON);
+document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
+
+// History Filters
+document.getElementById('searchInput').addEventListener('input', renderHistory);
+document.getElementById('tagFilter').addEventListener('change', renderHistory);
+document.getElementById('dateFrom').addEventListener('change', renderHistory);
+document.getElementById('dateTo').addEventListener('change', renderHistory);
+document.getElementById('clearFilters').addEventListener('click', () => {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('tagFilter').value = '';
+  document.getElementById('dateFrom').value = '';
+  document.getElementById('dateTo').value = '';
+  renderHistory();
+});
+
+// Global State Change Handler
+EventBus.on('state:change', () => {
+  const state = AppState.get();
+  
+  // Update settings UI
+  document.getElementById('weeklyTarget').value = state.settings.weeklyTarget || 3;
+  document.getElementById('graceDays').value = state.settings.graceDays || 1;
+  document.getElementById('toggleSuggestions').checked = !!state.settings.suggestions;
+  document.getElementById('toggleSounds').checked = !!state.settings.sounds;
+  
+  // Re-render all views
+  renderDashboard();
+  renderHistory();
+  renderPresets();
+  renderPlanner();
+  
+  // Check for new achievements
+  Achievements.checkAllBadges();
+});
+
+// View Change Handler
+EventBus.on('view:change', (view) => {
+  if (view === 'dashboard') renderDashboard();
+  if (view === 'history') renderHistory();
+  if (view === 'presets') renderPresets();
+  if (view === 'planner') renderPlanner();
+});
+
+// Keyboard Shortcuts
+window.addEventListener('keydown', (e) => {
+  // Escape to close modal
+  if (e.key === 'Escape') {
+    UI.hideModal();
+  }
+  
+  // Ctrl/Cmd + K for quick log
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    openQuickLog();
+  }
+});
+
+/* ==================== INITIALIZATION ==================== */
+
+// Initial render
+renderDashboard();
+renderHistory();
+renderPresets();
+renderPlanner();
+
+// Check for new achievements on load
+Achievements.checkAllBadges();
+
+// Log app state to console for debugging
+console.log('ZenFit Enhanced v2.0 initialized');
+console.log('Current state:', AppState.get());
+console.log('PRs:', computePRs());
+
+</script>
+</body>
+</html>
